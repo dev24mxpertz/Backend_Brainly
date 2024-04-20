@@ -1571,201 +1571,197 @@ async function updateWeeklyPerformance(
 
 //  -----------------------------------------------------------------------------------------------
 
-exports.Update_Drag_Drop = catchAsyncErrors(async (req, res) => {
-  try {
-    // console.log(req.body);
-    const { userID, StoryTitle, WordExplorerID } = req.body;
+// exports.Update_Drag_Drop = catchAsyncErrors(async (req, res) => {
+//   try {
+//     // console.log(req.body);
+//     const { userID, StoryTitle, WordExplorerID } = req.body;
 
-    let FoundedDargandDrop = await DragDrop.findOne({
-      StoryTitle: StoryTitle,
-      userID: userID,
-    });
+//     let FoundedDargandDrop = await DragDrop.findOne({
+//       StoryTitle: StoryTitle,
+//       userID: userID,
+//     });
 
-    if (!FoundedDargandDrop) {
-      return res.status(404).json({ error: "FoundedDargandDrop not found" });
-    }
+//     if (!FoundedDargandDrop) {
+//       return res.status(404).json({ error: "FoundedDargandDrop not found" });
+//     }
 
-    // console.log(FoundedDargandDrop);
-    // console.log(WordExplorerID);
+//     // console.log(FoundedDargandDrop);
+//     // console.log(WordExplorerID);
 
-    const updatedWordexplore = FoundedDargandDrop.Wordexplore.map(
-      (val, index) => {
-        let wordexplorerindexID = val._id.toString(); // Convert ObjectId to string
-        // console.log(wordexplorerindexID);
-        if (wordexplorerindexID === WordExplorerID) {
-          val.isMatched = true; // Update the field as required
-        }
-        return val;
-      }
-    );
-    FoundedDargandDrop.Wordexplore = updatedWordexplore;
-    await FoundedDargandDrop.save();
-    res.status(200).json({ message: "Wordexplore updated successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-});
+//     const updatedWordexplore = FoundedDargandDrop.Wordexplore.map(
+//       (val, index) => {
+//         let wordexplorerindexID = val._id.toString(); // Convert ObjectId to string
+//         // console.log(wordexplorerindexID);
+//         if (wordexplorerindexID === WordExplorerID) {
+//           val.isMatched = true; // Update the field as required
+//         }
+//         return val;
+//       }
+//     );
+//     FoundedDargandDrop.Wordexplore = updatedWordexplore;
+//     await FoundedDargandDrop.save();
+//     res.status(200).json({ message: "Wordexplore updated successfully" });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// });
 
-// Create_Drag_and_Drop_Data
-exports.Create_Drag_and_Drop_Data = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const { StoryTitle, userID, Wordexplore } = req.body;
+// // Create_Drag_and_Drop_Data
+// exports.Create_Drag_and_Drop_Data = async (req, res) => {
+//   // console.log(req.body);
+//   try {
+//     const { StoryTitle, userID, Wordexplore } = req.body;
 
-    const ExistingData = await DragDrop.findOne({
-      StoryTitle: StoryTitle,
-      userID: userID,
-    });
+//     const ExistingData = await DragDrop.findOne({
+//       StoryTitle: StoryTitle,
+//       userID: userID,
+//     });
 
-    if (!ExistingData) {
-      const newDragDrop = new DragDrop({
-        StoryTitle,
-        userID,
-        Wordexplore,
-      });
+//     if (!ExistingData) {
+//       const newDragDrop = new DragDrop({
+//         StoryTitle,
+//         userID,
+//         Wordexplore,
+//       });
 
-      const savedDragDrop = await newDragDrop.save();
-      res.status(201).json(savedDragDrop); // Return newly created question
-    } else {
-      res.status(304).json({ message: "Data already Exists" }); // Return newly created question
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-};
+//       const savedDragDrop = await newDragDrop.save();
+//       res.status(201).json(savedDragDrop); // Return newly created question
+//     } else {
+//       res.status(304).json({ message: "Data already Exists" }); // Return newly created question
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// };
 
-exports.Get_Drag_and_Drop_Data = async (req, res) => {
-  try {
-    // console.log(req.body)
-    const { StoryTitle, userID, Wordexplore } = req.body;
-    const FoundedData = await DragDrop.findOne({
-      StoryTitle: StoryTitle,
-      userID: userID,
-    });
+// exports.Get_Drag_and_Drop_Data = async (req, res) => {
+//   try {
+//     // console.log(req.body)
+//     const { StoryTitle, userID, Wordexplore } = req.body;
+//     const FoundedData = await DragDrop.findOne({
+//       StoryTitle: StoryTitle,
+//       userID: userID,
+//     });
 
-    if (!FoundedData) {
-      res.status(304).json({ message: "No Data Founded Yet" });
-    } else {
-      res.status(200).json({ FoundedData });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-};
+//     if (!FoundedData) {
+//       res.status(304).json({ message: "No Data Founded Yet" });
+//     } else {
+//       res.status(200).json({ FoundedData });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// };
 
-exports.Create_BrainQuest_Data = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const { StoryTitle, userID, BrainQuest } = req.body;
+// exports.Create_BrainQuest_Data = async (req, res) => {
+//   // console.log(req.body);
+//   try {
+//     const { StoryTitle, userID, BrainQuest } = req.body;
 
-    const ExistingData = await BrainQuestModel.findOne({
-      StoryTitle: StoryTitle,
-      userID: userID,
-    });
+//     const ExistingData = await BrainQuestModel.findOne({
+//       StoryTitle: StoryTitle,
+//       userID: userID,
+//     });
 
-    if (!ExistingData) {
-      const newBrainQuestData = new BrainQuestModel({
-        StoryTitle: StoryTitle,
-        userID: userID,
-        BrainQuest: BrainQuest,
-      });
-      const savedBrainQuestData = await newBrainQuestData.save();
-      res.status(201).json(savedBrainQuestData); // Return newly created question
-    } else {
-      res.status(304).json({ message: "Data already Exists" }); // Return newly created question
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-};
+//     if (!ExistingData) {
+//       const newBrainQuestData = new BrainQuestModel({
+//         StoryTitle: StoryTitle,
+//         userID: userID,
+//         BrainQuest: BrainQuest,
+//       });
+//       const savedBrainQuestData = await newBrainQuestData.save();
+//       res.status(201).json(savedBrainQuestData); // Return newly created question
+//     } else {
+//       res.status(304).json({ message: "Data already Exists" }); // Return newly created question
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// };
 
-exports.Get_BrainQuest_Data = async (req, res) => {
-  try {
-    // console.log(req.body);
-    const { StoryTitle, userID } = req.body;
-    const FoundedData = await BrainQuestModel.findOne({
-      StoryTitle: StoryTitle,
-      userID: userID,
-    });
+// exports.Get_BrainQuest_Data = async (req, res) => {
+//   try {
+//     // console.log(req.body);
+//     const { StoryTitle, userID } = req.body;
+//     const FoundedData = await BrainQuestModel.findOne({
+//       StoryTitle: StoryTitle,
+//       userID: userID,
+//     });
 
-    if (!FoundedData) {
-      res.status(304).json({ message: "No Data Founded Yet" });
-    } else {
-      res.status(200).json({ FoundedData });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-};
+//     if (!FoundedData) {
+//       res.status(304).json({ message: "No Data Founded Yet" });
+//     } else {
+//       res.status(200).json({ FoundedData });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// };
 
-exports.Create_Status_Schema = async (req, res) => {
-  try {
-    // console.log(req.body);
-    const newStatus = new Status(req.body); // Creating a new instance of Status model with request body
-    const savedStatus = await newStatus.save(); // Saving the new status document to the database
-    res.status(201).json(savedStatus); // Responding with the saved status data
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message }); // Responding with the error message
-  }
-};
+// exports.Create_Status_Schema = async (req, res) => {
+//   try {
+//     // console.log(req.body);
+//     const newStatus = new Status(req.body); // Creating a new instance of Status model with request body
+//     const savedStatus = await newStatus.save(); // Saving the new status document to the database
+//     res.status(201).json(savedStatus); // Responding with the saved status data
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: error.message }); // Responding with the error message
+//   }
+// };
 
-exports.Get_Status__Data = async (req, res) => {
-  try {
-    // console.log(req.body);
-    const { StoryTitle, userID } = req.body;
-    const FoundedData = await Status.findOne({
-      StoryTitle: StoryTitle,
-      userID: userID,
-    });
+// exports.Get_Status__Data = async (req, res) => {
+//   try {
+//     // console.log(req.body);
+//     const { StoryTitle, userID } = req.body;
+//     const FoundedData = await Status.findOne({
+//       StoryTitle: StoryTitle,
+//       userID: userID,
+//     });
 
-    if (!FoundedData) {
-      res.status(304).json({ message: "No Data Founded Yet" });
-    } else {
-      res.status(200).json({ FoundedData });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-};
+//     if (!FoundedData) {
+//       res.status(304).json({ message: "No Data Founded Yet" });
+//     } else {
+//       res.status(200).json({ FoundedData });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// };
 
 // Create_whole_copy;
 
-
 exports.Create_whole_copy = async (req, res) => {
   try {
-    console.log(req.body);
     const { Student_ID, pathname, Data } = req.body;
-    console.log(pathname);
 
-    let FoundedData;
-    const alreadyExists = await CopyData.findOne({
-      Student_ID: Student_ID,
-      pathname: pathname,
-    });
-
-    if (alreadyExists) {
-      FoundedData = alreadyExists;
-      res.status(304).json(FoundedData);
+    // Check if data already exists
+    let foundedData = await CopyData.findOne({ Student_ID, pathname });
+    console.log(foundedData);
+    if (foundedData) {
+      console.log("Found Data: ----------- ");
+      return res.status(200).json({ foundedData }); // Resource not modified
     } else {
-      const CopyData_Creation = new CopyData({
-        Student_ID: Student_ID,
-        Data: Data,
-        pathname: pathname,
+      // Create new data if not found
+      const newCopyData = new CopyData({
+        Student_ID,
+        Data,
+        pathname,
       });
-      await CopyData_Creation.save();
-      FoundedData = CopyData_Creation;
-      res.status(200).json(FoundedData);
+      await newCopyData.save();
+      foundedData = newCopyData;
+      console.log("Created Data: -----------", foundedData);
+      return res.status(200).json({ foundedData }); // Resource created
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: error.message }); // Return error message
+    console.error("Error:", error);
+    return res.status(500).json({ error: error.message }); // Internal server error
   }
 };
 
@@ -1777,118 +1773,97 @@ exports.Get_whole_copy = async (req, res) => {
       Student_ID: Student_ID,
       pathname: pathname,
     });
-    res.status(201).json({ alreadyExits });
+     return res.status(201).json({ alreadyExits });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
   }
 };
 
-
-// exports.Update_Drag_Drop_Copy = async (req,res) => {
-//   try {
-//       console.log(req.body)
-//       const { StoryTitle, Student_ID, WordExplorerID, pathname } = req.body;
-
-//       const FoundedCopiedData  = await CopyData.findOne({
-//         Student_ID:Student_ID,
-//         pathname:pathname,
-//       })
-//       console.log(FoundedCopiedData);
-//     const filteredData = FoundedCopiedData.Data.map((val) => {
-//       if(val.Title === StoryTitle){
-//         val.Wordexplore.map((data) => {
-//           console.log(data)
-//           if(data._id === WordExplorerID){
-//               data.map((match) =>{
-//                return  map.isMatched = true,
-//               })
-//           }
-//         })
-//       }
-//     });
-//     console.log(filteredData);
-//     await filteredData.save()
-//     res.status(201).json(filteredData)
-
-//   } catch (error) {
-//     console.log(error)
-//     res.status(500).json({ error})
-//   }
-// } 
-
 exports.Update_Drag_Drop_Copy = async (req, res) => {
   try {
     // console.log(req.body);
     const { StoryTitle, Student_ID, WordExplorerID, pathname } = req.body;
-  
+
     const FoundedCopiedData = await CopyData.findOne({
       Student_ID: Student_ID,
       pathname: pathname,
     });
     // console.log(FoundedCopiedData);
 
- let matchedWordexplore = [];
+    let matchedWordexplore = [];
 
- await FoundedCopiedData.Data.forEach((val) => {
-   if (val.Title === StoryTitle) {
-     val.Wordexplore.forEach((data) => {
-      //  console.log(data);
-       const id = data._id.toString();
-       if (id === WordExplorerID) {
-         data.isMatched = true;
-         matchedWordexplore = val.Wordexplore; // Extract the Wordexplore array after the match
-       }
-     });
-   }
- });
-
-//  console.log(matchedWordexplore); 
+    await FoundedCopiedData.Data.forEach((val) => {
+      if (val.Title === StoryTitle) {
+        val.Status = "In Progress";
+        val.Wordexplore.forEach((data) => {
+          const id = data._id.toString();
+          if (id === WordExplorerID) {
+            data.isMatched = true;
+            matchedWordexplore = val.Wordexplore; // Extract the Wordexplore array after the match
+          }
+        });
+        val.Brainquest.forEach((data) => {
+          if (data.isCompleted === true) {
+            val.Status = "Completed";
+          }
+        });
+      }
+    });
 
     await FoundedCopiedData.save();
-    // console.log(FoundedCopiedData);
-    res.status(201).json({matchedWordexplore});
+    console.log(FoundedCopiedData);
+    return res.status(201).json({matchedWordexplore});
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
-
-exports.Update_Copy_brainQuest = async (req,res) => {
+exports.Update_Copy_brainQuest = async (req, res) => {
   try {
-    // console.log(req.body) 
-    const { StoryTitle, Student_ID, isCompleted, pathname } = req.body; 
-       const FoundedCopiedData = await CopyData.findOne({
-         Student_ID: Student_ID,
-         pathname: pathname,
-       });
-       // console.log(FoundedCopiedData);
+    // console.log(req.body)
+    const { StoryTitle, Student_ID, isCompleted, pathname } = req.body;
+    const FoundedCopiedData = await CopyData.findOne({
+      Student_ID: Student_ID,
+      pathname: pathname,
+    });
+    // console.log(FoundedCopiedData);
 
-       let matchedBarinQuest = [];
+    let matchedBarinQuest = [];
 
-       await FoundedCopiedData.Data.forEach((val) => {
-         if (val.Title === StoryTitle) {
-           val.Brainquest.forEach((data) => {
-            //  console.log(data); 
-               data.isCompleted = true;
-               matchedBarinQuest = val.Brainquest
-           });
-         }
-       });
+    await FoundedCopiedData.Data.forEach((val) => {
+      if (val.Title === StoryTitle) {
+        val.Brainquest.forEach((data) => {
+          //  console.log(data);
+          data.isCompleted = true;
+          matchedBarinQuest = val.Brainquest;
+        });
+      }
+    });
 
-      //  console.log(matchedBarinQuest);
+    //  console.log(matchedBarinQuest);
 
-       await FoundedCopiedData.save();
-       // console.log(FoundedCopiedData);
-       res.status(201).json({ matchedBarinQuest });
+    await FoundedCopiedData.save();
+    // console.log(FoundedCopiedData);
+    await FoundedCopiedData.Data.forEach((val) => {
+      if (val.Title === StoryTitle) {
+        val.Status = "In Progress";
+        val.Brainquest.forEach((data) => {
+          if (data.isCompleted === true) {
+            val.Status = "Completed";
+          }
+        });
+      }
+    });
+    await FoundedCopiedData.save();
 
+    res.status(201).json({ matchedBarinQuest });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json(error);
   }
-}
-
+};
 
 // Get_Copy_brainQuest;
 exports.Get_Copy_brainQuest = async (req, res) => {
@@ -1905,11 +1880,11 @@ exports.Get_Copy_brainQuest = async (req, res) => {
 
     await FoundedCopiedData.Data.forEach((val) => {
       if (val.Title === StoryTitle) {
-       return val.Brainquest.forEach((data) => {
-        // console.log(data);
-        if (data.isCompleted === true){
-          matchedBarinQuest = val.Brainquest;
-        }  
+        return val.Brainquest.forEach((data) => {
+          // console.log(data);
+          if (data.isCompleted === true) {
+            matchedBarinQuest = val.Brainquest;
+          }
         });
       }
     });
