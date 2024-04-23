@@ -1115,6 +1115,8 @@ exports.createQuestion = async (req, res) => {
       submitedanswer,
       tag,
       difficultyLevel,
+      pathname,
+      StoryTitle,
     } = req.body;
 
     let previouslyWrong;
@@ -1130,6 +1132,12 @@ exports.createQuestion = async (req, res) => {
       StudentId,
       QuestionsId,
     });
+
+    const CurrentCopy_Data = await CopyData.findOne({
+      Student_ID: StudentId,
+      pathname: pathname,
+    });
+
     // console.log(existingProgress);
     if (existingQuestion && existingProgress) {
       const UpdatedQuestion = await Question.findByIdAndUpdate(
@@ -1148,7 +1156,15 @@ exports.createQuestion = async (req, res) => {
         }
       );
       const savedQuestion = await UpdatedQuestion.save();
-      // console.log("Question Updated Successfully");
+      await CurrentCopy_Data.Data.forEach((val) => {
+        if (val.Title === StoryTitle) {
+          val.Brainquest.forEach((data) => {
+            data.Question_id.push(savedQuestion._id);
+          });
+        }
+      });
+      await CurrentCopy_Data.save();
+      res.status(201).json(savedQuestion); // Return newly created question
     } else {
       const newQuestion = new Question({
         StudentId,
@@ -1163,6 +1179,15 @@ exports.createQuestion = async (req, res) => {
         ProgressRef: existingProgress._id,
       });
       const savedQuestion = await newQuestion.save();
+      await CurrentCopy_Data.Data.forEach((val) => {
+        if (val.Title === StoryTitle) {
+          val.Brainquest.forEach((data) => {
+            data.Question_id.push(savedQuestion._id);
+          });
+        }
+      });
+      await CurrentCopy_Data.save();
+      console.log(CurrentCopy_Data);
       res.status(201).json(savedQuestion); // Return newly created question
     }
   } catch (error) {
@@ -1737,17 +1762,45 @@ async function updateWeeklyPerformance(
 
 // Create_whole_copy;
 
+// exports.Create_whole_copy = async (req, res) => {
+//   try {
+//     const { Student_ID, pathname, Data } = req.body;
+
+//     // Check if data already exists
+//     let foundedData = await CopyData.findOne({ Student_ID, pathname });
+
+//     if (foundedData) {
+//       console.log("Found Data: ----------- ");
+//       return res.status(200).json({ foundedData }); // Resource not modified
+//     } else {
+//       // Create new data if not found
+//       const newCopyData = new CopyData({
+//         Student_ID,
+//         Data,
+//         pathname,
+//       });
+//       await newCopyData.save();
+//       foundedData = newCopyData;
+//       console.log("Created Data: -----------");
+//       return res.status(200).json({ foundedData }); // Resource created
+//     }
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return res.status(500).json({ error: error.message }); // Internal server error
+//   }
+// };
+
 exports.Create_whole_copy = async (req, res) => {
   try {
     const { Student_ID, pathname, Data } = req.body;
 
     // Check if data already exists
-    let foundedData = await CopyData.findOne({ Student_ID, pathname });
-    console.log(foundedData);
-    if (foundedData) {
-      console.log("Found Data: ----------- ");
-      return res.status(200).json({ foundedData }); // Resource not modified
-    } else {
+    let foundedData = await CopyData.findOne({
+      Student_ID: Student_ID,
+      pathname: pathname,
+    });
+
+    if (!foundedData) {
       // Create new data if not found
       const newCopyData = new CopyData({
         Student_ID,
@@ -1756,8 +1809,11 @@ exports.Create_whole_copy = async (req, res) => {
       });
       await newCopyData.save();
       foundedData = newCopyData;
-      console.log("Created Data: -----------", foundedData);
-      return res.status(200).json({ foundedData }); // Resource created
+      console.log("Created Data: -----------");
+      return res.status(201).json({ foundedData }); // Resource created
+    } else {
+      console.log("Found Data: ----------- ");
+      return res.status(200).json({ foundedData }); // Resource found
     }
   } catch (error) {
     console.error("Error:", error);
@@ -1773,7 +1829,7 @@ exports.Get_whole_copy = async (req, res) => {
       Student_ID: Student_ID,
       pathname: pathname,
     });
-     return res.status(201).json({ alreadyExits });
+    return res.status(201).json({ alreadyExits });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
@@ -1813,7 +1869,7 @@ exports.Update_Drag_Drop_Copy = async (req, res) => {
 
     await FoundedCopiedData.save();
     console.log(FoundedCopiedData);
-    return res.status(201).json({matchedWordexplore});
+    return res.status(201).json({ matchedWordexplore });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
@@ -1823,7 +1879,8 @@ exports.Update_Drag_Drop_Copy = async (req, res) => {
 exports.Update_Copy_brainQuest = async (req, res) => {
   try {
     // console.log(req.body)
-    const { StoryTitle, Student_ID, isCompleted, pathname } = req.body;
+    const { StoryTitle, Student_ID, isCompleted, pathname, QuestionID } =
+      req.body;
     const FoundedCopiedData = await CopyData.findOne({
       Student_ID: Student_ID,
       pathname: pathname,
@@ -1870,12 +1927,19 @@ exports.Get_Copy_brainQuest = async (req, res) => {
   try {
     // console.log(req.body);
     const { StoryTitle, Student_ID, pathname } = req.body;
+    // const FoundedCopiedData = await CopyData.findOne({
+    //   Student_ID: Student_ID,
+    //   pathname: pathname,
+    // }).populate();
+    // // console.log(FoundedCopiedData);
     const FoundedCopiedData = await CopyData.findOne({
       Student_ID: Student_ID,
       pathname: pathname,
+    }).populate({
+      path: "Data.Brainquest.Question_id",
+      model: "Question",
     });
-    // console.log(FoundedCopiedData);
-
+    console.log(FoundedCopiedData);
     let matchedBarinQuest = [];
 
     await FoundedCopiedData.Data.forEach((val) => {

@@ -27,6 +27,10 @@ const brainQuestSchema = new mongoose.Schema({
   Option: [],
   Answer: String,
   isCompleted: { type: Boolean, default: false },
+  Question_id: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Question",
+  }],
 });
 
 const DataSchema = new mongoose.Schema({
