@@ -14,13 +14,13 @@ async function SendEmail_OTP(email, otp) {
         otp: otp
       }
     };
-
     const sendedmessage = await sgMail.send(msg);
     console.log("Signup Email has been sent!");
     return sendedmessage; // Return the result of sending the email
+    
   } catch (error) {
     console.error(error);
-    throw error; // Throw the error to be handled where the function is called
+    return error;
   }
 }
 
@@ -37,7 +37,8 @@ function generateOTP(length) {
 const sendOTP = async (email) => {
   try {
     const otp = generateOTP(6); // Generate a 6-digit OTP
-    await SendEmail_OTP(email, otp);
+   const MailData =  await SendEmail_OTP(email, otp);
+   console.log(MailData)
     return otp;
   } catch (error) {
     console.error(error);

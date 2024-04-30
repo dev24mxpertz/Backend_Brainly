@@ -63,11 +63,12 @@ exports.imageupload = async (req, res, next) => {
 
 exports.FindUsername = catchAsyncErrors(async (req, res, next) => {
   try {
+    console.log(req.body)
     const { Email } = req.body;
     const existingUser = await Student.findOne({ Email });
     if (existingUser) {
       const otp = await sendOTP(existingUser.Email);
-      // console.log(otp);
+      console.log(otp);
       existingUser.OTP = otp;
 
       await existingUser.save();
@@ -83,13 +84,16 @@ exports.FindUsername = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.MatchOTP = catchAsyncErrors(async (req, res, next) => {
-  const data = req.body;
+  const { user_id, OTP } = req.body;
   // console.log(data);
-  const FoundedUser = data.FoundedUser;
-  if (FoundedUser.OTP === Number(data.Otp)) {
+
+  const studentData = await Student.findOne({ _id: user_id });
+
+  // const FoundedUser = studentData.OTP;
+  if (Number(OTP) === Number(studentData.OTP)) {
     return res
       .status(200)
-      .json({ message: "OTP  Matched Successfully ", FoundedUser });
+      .json({ message: "OTP  Matched Successfully", studentData });
   } else {
     return res.status(404).json({ message: "OTP Doesn't Match" });
   }
@@ -97,6 +101,7 @@ exports.MatchOTP = catchAsyncErrors(async (req, res, next) => {
 
 exports.Reset_Password = catchAsyncErrors(async (req, res, next) => {
   try {
+    console.log(req.body)
     const { id, New_Password } = req.body;
     const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUND, 10));
     const hashedPassword = await bcrypt.hash(New_Password, salt);

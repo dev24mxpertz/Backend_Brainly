@@ -109,6 +109,8 @@ router.post("/api/me", isAuthorizedUser, currentAdmin);
 
 router.get("/api/signout", signout);
 
+// ---------------------------------------------------------------------------------- Password Recovery Api's
+
 router.post("/api/FindUsername", FindUsername);
 
 router.post("/api/MatchOTP", MatchOTP);
